@@ -4,22 +4,12 @@ import json
 
 df = pd.read_csv('table.csv')
 
-# print(df.sort_values('Course').head(100))
-
 courses = [x for x in list(df['Course'].unique()) if str(x) != 'nan']
 semesters = [x for x in list(df['Semester'].unique()) if str(x) != 'nan']
 print(semesters)
-grade_columns = ["Total","A","A-","A+","B","B-","B+","C","C-","C+","D","D-","D+","Fs","Withdraw"]
+grade_columns = ["Total","A","A-","A+","B","B-","B+","C","C-","C+","D","D-","D+","Fs","Withdraw", "Other"]
 
 data_dict = {}
-
-# Initialize data dict with empty spots
-for course in courses:
-	if (course not in data_dict): data_dict[course] = {}
-	for semester in semesters:
-		data_dict[course][semester] = { 'Professors': [], 'Sections': [], 'Course_List': {} }
-
-df = df[0:100]
 
 # Go row by row in table to add to JSON
 for index, row in df.iterrows():
@@ -27,6 +17,12 @@ for index, row in df.iterrows():
 	semester = row['Semester']
 	professor = row['Professor Name']
 	section = row['Sect']
+
+	# Make sure data dict can hold this data (i.e. the keys exist)
+	if (course not in data_dict): data_dict[course] = {}
+	if (semester not in data_dict[course]):
+		data_dict[course][semester] = { 'Professors': [], 'Course_List': {} }
+
 	if (str(course) != 'nan' and str(semester) != 'nan'):
 
 		# Account for no professor/section
