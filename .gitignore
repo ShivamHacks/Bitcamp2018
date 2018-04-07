@@ -1,4 +1,6 @@
-table.csv
-table.json
-test.txt
-.DS_Store
+# Ignore everything
+*
+
+# But not these files...
+!add_to_db.py
+!app.js

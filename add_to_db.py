@@ -19,7 +19,7 @@ for course in courses:
 	for semester in semesters:
 		data_dict[course][semester] = { 'Professors': [], 'Sections': [], 'Course_List': {} }
 
-df = df[0:10000]
+df = df[0:100]
 
 # Go row by row in table to add to JSON
 for index, row in df.iterrows():
@@ -49,40 +49,5 @@ for index, row in df.iterrows():
 
 		print('completed row: ' + str(index))
 
-"""
-
-# *** JUST FOR TESTING ***
-df = df[0:10]
-
-# Initialize Data Spots
-for course in courses:
-	data_dict[course] = {}
-	for semester in semesters:
-
-		# Set course attributes
-		data_dict[course][semester] = { 'Professors': [], 'Sections': [], 'Course_List': {} }
-
-		# Query dataframe for course during specific semester
-		query = 'Semester == "%s" & Course == "%s"' % (semester, course)
-		df_course = df.query(query)
-
-		if (len(df_course) > 0):
-			# Fill in unknowns
-			df_course['Sect'] = df_course['Sect'].fillna('Unknown Section')
-			df_course['Professor Name'] = df_course['Professor Name'].fillna('Unknown Professor')
-
-			# Populate professor and section lists
-			data_dict[course][semester]['Sections'] = list(df_course['Sect'].unique())
-			data_dict[course][semester]['Professors'] = list(df_course['Professor Name'].unique())
-
-			# Iterate over rows (each row represents specific section)
-			for index, section in df_course.iterrows():
-				# Section id = "Prof NameSection"
-				section_id = section['Professor Name'] + section['Sect']
-				data_dict[course][semester]['Course_List'][section_id] = section[grade_columns].to_dict()
-
-			# Subtract queried dataframe from entire dataframe to make future queries faster
-			df.drop(df_course.index.tolist(), inplace=True)
-"""
 # Save data as JSON
 json.dump(data_dict, open('table.json', 'w'), indent=4)
